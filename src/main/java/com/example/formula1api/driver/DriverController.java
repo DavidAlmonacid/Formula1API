@@ -1,29 +1,29 @@
 package com.example.formula1api.driver;
 
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/f1/drivers")
 public class DriverController {
 
-    private DriverService driverService;
+    private final DriverService driverService;
 
     private DriverController(DriverService driverService) {
         this.driverService = driverService;
     }
 
-    @GetMapping
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     private ResponseEntity<List<Driver>> findAll() {
         return ResponseEntity.ok(driverService.findAll());
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     private ResponseEntity<Driver> findById(@PathVariable Long id) {
         Driver driver = driverService.findById(id);
 
@@ -34,12 +34,22 @@ public class DriverController {
         return ResponseEntity.notFound().build();
     }
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     private ResponseEntity<Void> save(@RequestBody Driver driver) throws URISyntaxException {
-        Driver savedDriver = driverService.save(driver);
-        URI location = new URI("/api/f1/drivers/" + savedDriver.getId());
-
+        var savedDriver = driverService.save(driver);
+        var location = new URI("/api/f1/drivers/" + savedDriver.getId());
         return ResponseEntity.created(location).build();
+    }
+
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    private ResponseEntity<Void> update(@PathVariable Long id, @RequestBody Driver driver) {
+        Driver updatedDriver = driverService.update(id, driver);
+
+        if (updatedDriver != null) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.notFound().build();
     }
 
 }
