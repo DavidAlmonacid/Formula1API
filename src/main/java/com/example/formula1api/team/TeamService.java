@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class TeamService {
 
-    private TeamRepository teamRepository;
+    private final TeamRepository teamRepository;
 
     private TeamService(TeamRepository teamRepository) {
         this.teamRepository = teamRepository;
