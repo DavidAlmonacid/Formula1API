@@ -1,8 +1,9 @@
 package com.example.formula1api.team;
 
 import com.example.formula1api.driver.Driver;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.NonNull;
 
@@ -11,6 +12,7 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "teams")
+@JsonIgnoreProperties({"drivers"})
 public class Team {
 
     @Id
@@ -18,9 +20,9 @@ public class Team {
     private Long id;
 
     @NonNull
+    @NotBlank(message = "Name is required")
     private String name;
 
-    @JsonManagedReference
     @OneToMany(mappedBy = "team")
     private List<Driver> drivers;
 
@@ -30,6 +32,14 @@ public class Team {
 
     public Team(@NonNull String name) {
         this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "Team{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
     }
 
 }
