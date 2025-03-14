@@ -1,17 +1,18 @@
 package com.example.formula1api.driver;
 
+import com.example.formula1api.team.TeamRepository;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class DriverService {
 
-    private DriverRepository driverRepository;
+    private final DriverRepository driverRepository;
+    private final TeamRepository teamRepository;
 
-    private DriverService(DriverRepository driverRepository) {
+    private DriverService(DriverRepository driverRepository, TeamRepository teamRepository) {
         this.driverRepository = driverRepository;
+        this.teamRepository = teamRepository;
     }
 
     public List<Driver> findAll() {
@@ -23,7 +24,35 @@ public class DriverService {
     }
 
     public Driver save(Driver newDriver) {
+        var team = newDriver.getTeam();
+
+        if (team.getId() == null) {
+            // Persist the team first so that it is not transient.
+            team = teamRepository.save(team);
+            newDriver.setTeam(team);
+        }
+
         return driverRepository.save(newDriver);
+    }
+
+    public Driver update(Long id, Driver driver) {
+        var existingDriver = findById(id);
+
+        if (existingDriver == null) {
+            return null;
+        }
+
+        // Check if the team entity is new and persist it if necessary.
+        var team = driver.getTeam();
+
+        if (team.getId() == null) {
+            team = teamRepository.save(team);
+        }
+
+        existingDriver.setName(driver.getName());
+        existingDriver.setTeam(team);
+
+        return save(existingDriver);
     }
 
 }
