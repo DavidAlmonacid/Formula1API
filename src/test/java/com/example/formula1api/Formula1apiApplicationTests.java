@@ -6,10 +6,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
-
-import java.net.URI;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -33,33 +33,43 @@ class Formula1apiApplicationTests {
 
     @Test
     @DirtiesContext
-    void shouldCreateProperlyANewTeamAndANewDriver() {
-        // First, save the team
-        Team team = new Team("McLaren");
-
-        var teamPostResponse = restTemplate.postForEntity("/api/f1/teams", team, Void.class);
-        assertThat(teamPostResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-
-        URI newTeamLocation = teamPostResponse.getHeaders().getLocation();
-        assertThat(newTeamLocation).isNotNull();
-
-        var teamGetResponse = restTemplate.getForEntity(newTeamLocation, Team.class);
-        assertThat(teamGetResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-
-        Team savedTeam = teamGetResponse.getBody();
-        assertThat(savedTeam).isNotNull();
-
-        // Now, create and save the driver with the saved team
-        Driver driver = new Driver("Lando NoWins", savedTeam);
+    void shouldCreateProperlyANewDriver() {
+        var driver = new Driver("Lando NoWins", new Team("McLaren"));
 
         var postResponse = restTemplate.postForEntity("/api/f1/drivers", driver, Void.class);
         assertThat(postResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
-        URI newDriverLocation = postResponse.getHeaders().getLocation();
+        var newDriverLocation = postResponse.getHeaders().getLocation();
         assertThat(newDriverLocation).isNotNull();
 
         var getResponse = restTemplate.getForEntity(newDriverLocation, String.class);
         assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    void shouldReturnABadRequestWhenCreatingANewDriverWithInvalidData() {
+        Driver driver = new Driver("   ", new Team("   "));
+        var postResponse = restTemplate.postForEntity("/api/f1/drivers", driver, Void.class);
+        assertThat(postResponse.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
+    @DirtiesContext
+    void shouldUpdateProperlyAnExistingDriver() {
+        var newDriver = new Driver("Lewis Hamilton", new Team("Ferrari"));
+        var request = new HttpEntity<>(newDriver);
+
+        var putResponse = restTemplate.exchange("/api/f1/drivers/2", HttpMethod.PUT, request, Void.class);
+        assertThat(putResponse.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+    }
+
+    @Test
+    void shouldNotUpdateADriverWhenItDoesNotExist() {
+        var newDriver = new Driver("George Russell", new Team("Mercedes"));
+        var request = new HttpEntity<>(newDriver);
+
+        var putResponse = restTemplate.exchange("/api/f1/drivers/1000", HttpMethod.PUT, request, Void.class);
+        assertThat(putResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
 }
