@@ -10,7 +10,7 @@ import java.net.URISyntaxException;
 @RequestMapping("/api/f1/teams")
 public class TeamController {
 
-    private TeamService teamService;
+    private final TeamService teamService;
 
     private TeamController(TeamService teamService) {
         this.teamService = teamService;
