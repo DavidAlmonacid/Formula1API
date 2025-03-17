@@ -18,5 +18,4 @@ public class TeamService {
     public Team save(Team newTeam) {
         return teamRepository.save(newTeam);
     }
-
 }
