@@ -1,6 +1,7 @@
 package com.example.formula1api.driver;
 
 import com.example.formula1api.team.TeamRepository;
+import jakarta.annotation.Nullable;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -19,6 +20,7 @@ public class DriverService {
         return (List<Driver>) driverRepository.findAll();
     }
 
+    @Nullable
     public Driver findById(Long id) {
         return driverRepository.findById(id).orElse(null);
     }
@@ -35,6 +37,7 @@ public class DriverService {
         return driverRepository.save(newDriver);
     }
 
+    @Nullable
     public Driver update(Long id, Driver driver) {
         var existingDriver = findById(id);
 
