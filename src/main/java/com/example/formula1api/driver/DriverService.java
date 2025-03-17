@@ -27,35 +27,27 @@ public class DriverService {
 
     public Driver save(Driver newDriver) {
         var team = newDriver.getTeam();
+        var existingTeam = teamRepository.findByName(team.getName()); // Check if a team with the same name already exists
 
-        if (team.getId() == null) {
-            // Persist the team first so that it is not transient.
-            team = teamRepository.save(team);
-            newDriver.setTeam(team);
-        }
+        newDriver.setTeam(existingTeam.orElseGet(() -> teamRepository.save(team)));
 
         return driverRepository.save(newDriver);
     }
 
     @Nullable
     public Driver update(Long id, Driver driver) {
-        var existingDriver = findById(id);
+        var existingDriver = driverRepository.findById(id).orElse(null);
 
         if (existingDriver == null) {
             return null;
         }
 
-        // Check if the team entity is new and persist it if necessary.
         var team = driver.getTeam();
+        var existingTeam = teamRepository.findByName(team.getName()); // Check if a team with the same name already exists
 
-        if (team.getId() == null) {
-            team = teamRepository.save(team);
-        }
-
+        existingDriver.setTeam(existingTeam.orElseGet(() -> teamRepository.save(team)));
         existingDriver.setName(driver.getName());
-        existingDriver.setTeam(team);
 
-        return save(existingDriver);
+        return driverRepository.save(existingDriver);
     }
-
 }
