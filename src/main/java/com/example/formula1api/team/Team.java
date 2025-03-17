@@ -20,7 +20,8 @@ public class Team {
     private Long id;
 
     @NonNull
-    @NotBlank(message = "Name is required")
+    @NotBlank(message = "Team name is required")
+    @Column(unique = true)
     private String name;
 
     @OneToMany(mappedBy = "team")
@@ -41,5 +42,4 @@ public class Team {
                 ", name='" + name + '\'' +
                 '}';
     }
-
 }
