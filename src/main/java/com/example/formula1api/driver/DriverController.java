@@ -1,5 +1,6 @@
 package com.example.formula1api.driver;
 
+import com.example.formula1api.exceptions.NotFoundException;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,11 +28,11 @@ public class DriverController {
     private ResponseEntity<Driver> findById(@PathVariable Long id) {
         Driver driver = driverService.findById(id);
 
-        if (driver != null) {
-            return ResponseEntity.ok(driver);
+        if (driver == null) {
+            throw new NotFoundException("Driver with id '" + id + "' was not found");
         }
 
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(driver);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -45,11 +46,11 @@ public class DriverController {
     private ResponseEntity<Void> update(@PathVariable Long id, @RequestBody Driver driver) {
         Driver updatedDriver = driverService.update(id, driver);
 
-        if (updatedDriver != null) {
-            return ResponseEntity.noContent().build();
+        if (updatedDriver == null) {
+            throw new NotFoundException("Driver with id '" + id + "' was not found");
         }
 
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.noContent().build();
     }
 
 }
