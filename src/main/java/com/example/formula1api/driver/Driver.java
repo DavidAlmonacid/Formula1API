@@ -20,7 +20,7 @@ public class Driver {
     private Long id;
 
     @NonNull
-    @NotBlank(message = "Name is required")
+    @NotBlank(message = "Driver name is required")
     private String name;
 
     @NonNull
@@ -48,5 +48,4 @@ public class Driver {
                 ", name='" + name + '\'' +
                 '}';
     }
-
 }
