@@ -60,4 +60,10 @@ public class DriverController {
 
         return ResponseEntity.noContent().build();
     }
+
+    @DeleteMapping("/{id}")
+    private ResponseEntity<Void> delete(@PathVariable Long id) {
+        driverService.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
 }
