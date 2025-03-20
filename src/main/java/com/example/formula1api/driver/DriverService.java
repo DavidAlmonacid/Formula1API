@@ -1,5 +1,6 @@
 package com.example.formula1api.driver;
 
+import com.example.formula1api.exceptions.NotFoundException;
 import com.example.formula1api.team.TeamRepository;
 import jakarta.annotation.Nullable;
 import org.springframework.stereotype.Service;
@@ -49,5 +50,13 @@ public class DriverService {
         existingDriver.setName(driver.getName());
 
         return driverRepository.save(existingDriver);
+    }
+
+    public void deleteById(Long id) {
+        if (!driverRepository.existsById(id)) {
+            throw new NotFoundException("Driver with id '" + id + "' was not found");
+        }
+
+        driverRepository.deleteById(id);
     }
 }
