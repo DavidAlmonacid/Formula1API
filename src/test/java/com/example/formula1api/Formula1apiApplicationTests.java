@@ -72,4 +72,18 @@ class Formula1apiApplicationTests {
         assertThat(putResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
+    @Test
+    @DirtiesContext
+    void shouldDeleteProperlyAnExistingDriver() {
+        var deleteResponse = restTemplate.exchange(
+                "/api/f1/drivers/1",
+                HttpMethod.DELETE,
+                null,
+                Void.class);
+
+        assertThat(deleteResponse.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+        var getResponse = restTemplate.getForEntity("/api/f1/drivers/1", String.class);
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
 }
