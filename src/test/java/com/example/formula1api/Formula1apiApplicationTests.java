@@ -86,4 +86,12 @@ class Formula1apiApplicationTests {
         var getResponse = restTemplate.getForEntity("/api/f1/drivers/1", String.class);
         assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
+
+    @Test
+    @DirtiesContext
+    void shouldCreateProperlyANewTeam() {
+        var team = new Team("Mercedes");
+        var postResponse = restTemplate.postForEntity("/api/f1/teams", team, Void.class);
+        assertThat(postResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+    }
 }
