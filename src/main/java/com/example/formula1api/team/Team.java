@@ -20,7 +20,7 @@ public class Team {
     private Long id;
 
     @NonNull
-    @NotBlank(message = "Team name is required")
+    @NotBlank(message = "Team 'name' is required")
     @Column(unique = true)
     private String name;
 
