@@ -21,8 +21,8 @@ public class Formula1DataLoader implements CommandLineRunner {
     @Override
     public void run(String... args) {
         // Create and save teams
-        Team ferrari = new Team("Ferrari");
-        Team mclaren = new Team("McLaren");
+        Team ferrari = new Team("Ferrari", "Scuderia Ferrari HP");
+        Team mclaren = new Team("McLaren", "McLaren Formula 1 Team");
         teamRepository.save(ferrari);
         teamRepository.save(mclaren);
 
@@ -32,5 +32,4 @@ public class Formula1DataLoader implements CommandLineRunner {
         driverRepository.save(driver1);
         driverRepository.save(driver2);
     }
-
 }
