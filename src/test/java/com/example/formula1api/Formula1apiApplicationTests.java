@@ -34,7 +34,7 @@ class Formula1apiApplicationTests {
     @Test
     @DirtiesContext
     void shouldCreateProperlyANewDriver() {
-        var driver = new Driver("Lando NoWins", new Team("McLaren"));
+        var driver = new Driver("Lando NoWins", new Team("McLaren", "McLaren Formula 1 Team"));
 
         var postResponse = restTemplate.postForEntity("/api/f1/drivers", driver, Void.class);
         assertThat(postResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -48,7 +48,7 @@ class Formula1apiApplicationTests {
 
     @Test
     void shouldReturnABadRequestWhenCreatingANewDriverWithInvalidData() {
-        Driver driver = new Driver("   ", new Team("   "));
+        Driver driver = new Driver("   ", new Team("   ", "   "));
         var postResponse = restTemplate.postForEntity("/api/f1/drivers", driver, Void.class);
         assertThat(postResponse.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
@@ -56,7 +56,7 @@ class Formula1apiApplicationTests {
     @Test
     @DirtiesContext
     void shouldUpdateProperlyAnExistingDriver() {
-        var newDriver = new Driver("Lewis Hamilton", new Team("Ferrari"));
+        var newDriver = new Driver("Lewis Hamilton", new Team("Ferrari", "Scuderia Ferrari HP"));
         var request = new HttpEntity<>(newDriver);
 
         var putResponse = restTemplate.exchange("/api/f1/drivers/2", HttpMethod.PUT, request, Void.class);
@@ -65,7 +65,9 @@ class Formula1apiApplicationTests {
 
     @Test
     void shouldNotUpdateADriverWhenItDoesNotExist() {
-        var newDriver = new Driver("George Russell", new Team("Mercedes"));
+        var newDriver = new Driver(
+                "George Russell",
+                new Team("Mercedes", "Mercedes-AMG PETRONAS Formula One Team"));
         var request = new HttpEntity<>(newDriver);
 
         var putResponse = restTemplate.exchange("/api/f1/drivers/1000", HttpMethod.PUT, request, Void.class);
@@ -90,8 +92,15 @@ class Formula1apiApplicationTests {
     @Test
     @DirtiesContext
     void shouldCreateProperlyANewTeam() {
-        var team = new Team("Mercedes");
+        var team = new Team("Mercedes", "Mercedes-AMG PETRONAS Formula One Team");
         var postResponse = restTemplate.postForEntity("/api/f1/teams", team, Void.class);
         assertThat(postResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+    }
+
+    @Test
+    void shouldReturnABadRequestWhenCreatingANewTeamWithInvalidData() {
+        Team team = new Team("   ", "   ");
+        var postResponse = restTemplate.postForEntity("/api/f1/teams", team, Void.class);
+        assertThat(postResponse.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 }
