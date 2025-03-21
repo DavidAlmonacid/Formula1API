@@ -18,4 +18,17 @@ public class TeamService {
     public Team save(Team newTeam) {
         return teamRepository.save(newTeam);
     }
+
+    public Team update(Long id, Team team) {
+        var existingTeam = teamRepository.findById(id).orElse(null);
+
+        if (existingTeam == null) {
+            return null;
+        }
+
+        existingTeam.setName(team.getName());
+        existingTeam.setFullName(team.getFullName());
+
+        return teamRepository.save(existingTeam);
+    }
 }
