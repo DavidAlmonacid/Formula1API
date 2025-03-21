@@ -11,6 +11,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
 
+import java.util.Objects;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -102,5 +104,28 @@ class Formula1apiApplicationTests {
         Team team = new Team("   ", "   ");
         var postResponse = restTemplate.postForEntity("/api/f1/teams", team, Void.class);
         assertThat(postResponse.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
+    @DirtiesContext
+    void shouldUpdateProperlyAnExistingTeam() {
+        var newTeam = new Team("Ferrari", "Scuderia Ferrari");
+        var request = new HttpEntity<>(newTeam);
+
+        var putResponse = restTemplate.exchange("/api/f1/teams/1", HttpMethod.PUT, request, Void.class);
+        assertThat(putResponse.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+        var getResponse = restTemplate.getForEntity("/api/f1/teams/1", Team.class);
+        assertThat(Objects.requireNonNull(getResponse.getBody()).getFullName())
+                .isEqualTo("Scuderia Ferrari");
+    }
+
+    @Test
+    void shouldNotUpdateATeamWhenItDoesNotExist() {
+        var newTeam = new Team("Ferrari", "Scuderia Ferrari 2");
+        var request = new HttpEntity<>(newTeam);
+
+        var putResponse = restTemplate.exchange("/api/f1/teams/1000", HttpMethod.PUT, request, Void.class);
+        assertThat(putResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 }
