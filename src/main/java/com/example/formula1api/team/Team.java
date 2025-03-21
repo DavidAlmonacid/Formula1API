@@ -24,6 +24,11 @@ public class Team {
     @Column(unique = true)
     private String name;
 
+    @NonNull
+    @NotBlank(message = "Team 'fullName' is required")
+    @Column(unique = true)
+    private String fullName;
+
     @OneToMany(mappedBy = "team")
     private List<Driver> drivers;
 
@@ -31,8 +36,9 @@ public class Team {
     public Team() {
     }
 
-    public Team(@NonNull String name) {
+    public Team(@NonNull String name, @NonNull String fullName) {
         this.name = name;
+        this.fullName = fullName;
     }
 
     @Override
@@ -40,6 +46,7 @@ public class Team {
         return "Team{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", fullName='" + fullName + '\'' +
                 '}';
     }
 }
