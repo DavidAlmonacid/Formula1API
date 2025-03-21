@@ -1,5 +1,6 @@
 package com.example.formula1api.team;
 
+import com.example.formula1api.exceptions.NotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,11 +21,11 @@ public class TeamController {
     private ResponseEntity<Team> findById(@PathVariable Long id) {
         Team team = teamService.findById(id);
 
-        if (team != null) {
-            return ResponseEntity.ok(team);
+        if (team == null) {
+            throw new NotFoundException("Team with id '" + id + "' was not found");
         }
 
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(team);
     }
 
     @PostMapping
@@ -35,4 +36,14 @@ public class TeamController {
         return ResponseEntity.created(newTeamLocation).build();
     }
 
+    @PutMapping("/{id}")
+    private ResponseEntity<Team> update(@PathVariable Long id, @RequestBody Team team) {
+        Team updatedTeam = teamService.update(id, team);
+
+        if (updatedTeam == null) {
+            throw new NotFoundException("Team with id '" + id + "' was not found");
+        }
+
+        return ResponseEntity.noContent().build();
+    }
 }
