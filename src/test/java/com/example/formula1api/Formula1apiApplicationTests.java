@@ -128,4 +128,15 @@ class Formula1apiApplicationTests {
         var putResponse = restTemplate.exchange("/api/f1/teams/1000", HttpMethod.PUT, request, Void.class);
         assertThat(putResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
+
+    @Test
+    @DirtiesContext
+    void shouldDeleteAnExistingTeam() {
+        var deleteResponse = restTemplate.exchange(
+                "/api/f1/teams/1",
+                HttpMethod.DELETE,
+                null,
+                Void.class);
+        assertThat(deleteResponse.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+    }
 }
