@@ -29,7 +29,7 @@ public class TeamController {
     }
 
     @PostMapping
-    private ResponseEntity<Team> save(@RequestBody Team team) throws URISyntaxException {
+    private ResponseEntity<Void> save(@RequestBody Team team) throws URISyntaxException {
         Team savedTeam = teamService.save(team);
         URI newTeamLocation = new URI("/api/f1/teams/" + savedTeam.getId());
 
@@ -37,7 +37,7 @@ public class TeamController {
     }
 
     @PutMapping("/{id}")
-    private ResponseEntity<Team> update(@PathVariable Long id, @RequestBody Team team) {
+    private ResponseEntity<Void> update(@PathVariable Long id, @RequestBody Team team) {
         Team updatedTeam = teamService.update(id, team);
 
         if (updatedTeam == null) {
