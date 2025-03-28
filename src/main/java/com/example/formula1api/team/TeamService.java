@@ -1,5 +1,6 @@
 package com.example.formula1api.team;
 
+import com.example.formula1api.exceptions.NotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -30,5 +31,13 @@ public class TeamService {
         existingTeam.setFullName(team.getFullName());
 
         return teamRepository.save(existingTeam);
+    }
+
+    public void deleteById(Long id) {
+        if (!teamRepository.existsById(id)) {
+            throw new NotFoundException("Team with id '" + id + "' was not found");
+        }
+
+        teamRepository.deleteById(id);
     }
 }
