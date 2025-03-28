@@ -138,5 +138,8 @@ class Formula1apiApplicationTests {
                 null,
                 Void.class);
         assertThat(deleteResponse.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+        var getResponse = restTemplate.getForEntity("/api/f1/teams/1", String.class);
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 }
