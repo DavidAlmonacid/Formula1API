@@ -1,13 +1,13 @@
 CREATE TABLE teams (
   id bigint AUTO_INCREMENT PRIMARY KEY,
-  name varchar(255) NOT NULL UNIQUE
+  name varchar(255) NOT NULL UNIQUE,
+  full_name varchar(255) NOT NULL UNIQUE
 );
 
 CREATE TABLE drivers (
   id bigint AUTO_INCREMENT PRIMARY KEY,
   name varchar(255) NOT NULL,
-  team_id bigint,
-  FOREIGN KEY (team_id) REFERENCES teams(id)
+  team_id bigint
 );
 
 CREATE TABLE races (
@@ -18,7 +18,5 @@ CREATE TABLE races (
 
 CREATE TABLE race_participants (
   race_id bigint NOT NULL,
-  driver_id bigint NOT NULL,
-  FOREIGN KEY (driver_id) REFERENCES drivers(id),
-  FOREIGN KEY (race_id) REFERENCES races(id)
+  driver_id bigint NOT NULL
 );
