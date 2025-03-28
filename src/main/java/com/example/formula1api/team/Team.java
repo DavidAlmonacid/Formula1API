@@ -29,7 +29,7 @@ public class Team {
     @Column(unique = true)
     private String fullName;
 
-    @OneToMany(mappedBy = "team")
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Driver> drivers;
 
     // Constructors
