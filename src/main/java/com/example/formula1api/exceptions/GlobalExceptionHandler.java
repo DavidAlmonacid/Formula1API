@@ -37,7 +37,7 @@ public class GlobalExceptionHandler {
         return responseEntityCustomMessage(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
-    public static ResponseEntity<ErrorResponse> responseEntityCustomMessage(HttpStatus status, String message) {
+    private static ResponseEntity<ErrorResponse> responseEntityCustomMessage(HttpStatus status, String message) {
         ErrorResponse errorResponse = new ErrorResponse(status.value(), status.getReasonPhrase(), message);
         return ResponseEntity.status(status).body(errorResponse);
     }
