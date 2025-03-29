@@ -20,7 +20,7 @@ public class Driver {
     private Long id;
 
     @NonNull
-    @NotBlank(message = "Driver name is required")
+    @NotBlank(message = "Driver 'name' is required")
     private String name;
 
     @NonNull
