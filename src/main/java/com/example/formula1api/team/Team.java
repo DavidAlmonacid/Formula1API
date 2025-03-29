@@ -2,6 +2,7 @@ package com.example.formula1api.team;
 
 import com.example.formula1api.driver.Driver;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
@@ -12,7 +13,8 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "teams")
-@JsonIgnoreProperties({"drivers"})
+@JsonIgnoreProperties({ "drivers" })
+@JsonDeserialize(using = TeamDeserializer.class)
 public class Team {
 
     @Id
@@ -41,6 +43,7 @@ public class Team {
         this.fullName = fullName;
     }
 
+    // toString
     @Override
     public String toString() {
         return "Team{" +
