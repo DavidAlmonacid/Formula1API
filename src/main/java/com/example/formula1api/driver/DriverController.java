@@ -37,10 +37,6 @@ public class DriverController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     private ResponseEntity<Void> save(@RequestBody Driver driver) throws URISyntaxException {
-        if (driver.getName().isBlank()) {
-            throw new IllegalArgumentException("Driver name is required");
-        }
-
         var savedDriver = driverService.save(driver);
         var location = new URI("/api/f1/drivers/" + savedDriver.getId());
         return ResponseEntity.created(location).build();
@@ -48,11 +44,7 @@ public class DriverController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     private ResponseEntity<Void> update(@PathVariable Long id, @RequestBody Driver driver) {
-        if (driver.getName().isBlank()) {
-            throw new IllegalArgumentException("Driver name is required");
-        }
-
-        Driver updatedDriver = driverService.update(id, driver);
+        var updatedDriver = driverService.update(id, driver);
 
         if (updatedDriver == null) {
             throw new NotFoundException("Driver with id '" + id + "' was not found");
