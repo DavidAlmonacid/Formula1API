@@ -1,6 +1,7 @@
 package com.example.formula1api;
 
 import com.example.formula1api.driver.Driver;
+import com.example.formula1api.race.Race;
 import com.example.formula1api.team.Team;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
 
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -141,5 +144,22 @@ class Formula1apiApplicationTests {
 
         var getResponse = restTemplate.getForEntity("/api/f1/teams/1", String.class);
         assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    @DirtiesContext
+    void shouldCreateANewRaceProperly() {
+        var newRace = new Race(
+                "FORMULA 1 LOUIS VUITTON AUSTRALIAN GRAND PRIX 2025",
+                LocalDate.of(2025, Month.MARCH, 16));
+
+        var postResponse = restTemplate.postForEntity("/api/f1/races", newRace, Void.class);
+        assertThat(postResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+        var newRaceLocation = postResponse.getHeaders().getLocation();
+        assertThat(newRaceLocation).isNotNull();
+
+        var getResponse = restTemplate.getForEntity(newRaceLocation, String.class);
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 }
