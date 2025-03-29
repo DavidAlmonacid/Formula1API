@@ -4,6 +4,7 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -18,8 +19,8 @@ public class GlobalExceptionHandler {
         return responseEntityCustomMessage(HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    ResponseEntity<ErrorResponse> handleIllegalArgument(IllegalArgumentException ex) {
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    ResponseEntity<ErrorResponse> handleMessageNotReadable(HttpMessageNotReadableException ex) {
         return responseEntityCustomMessage(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
