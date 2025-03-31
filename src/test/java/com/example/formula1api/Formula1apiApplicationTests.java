@@ -179,4 +179,47 @@ class Formula1apiApplicationTests {
         var postResponse = restTemplate.postForEntity("/api/f1/races", invalidRace, Void.class);
         assertThat(postResponse.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
+
+    @Test
+    @DirtiesContext
+    void shouldUpdateProperlyAnExistingRace() {
+        // Create a valid race
+        var newRace = new Race(
+                "FORMULA 1 LOUIS VUITTON AUSTRALIAN GRAND PRIX 2025",
+                LocalDate.of(2025, Month.MARCH, 16));
+        var postResponse = restTemplate.postForEntity("/api/f1/races", newRace, Void.class);
+        var raceLocation = postResponse.getHeaders().getLocation();
+        assertThat(raceLocation).isNotNull();
+
+        // Prepare updated race data
+        var updatedRace = new Race(
+                "FORMULA 1 LOUIS VUITTON AUSTRALIAN GRAND PRIX UPDATED",
+                LocalDate.of(2025, Month.APRIL, 16));
+        // Send PUT request with the updated race
+        var request = new HttpEntity<>(updatedRace);
+        var putResponse = restTemplate.exchange(raceLocation, HttpMethod.PUT, request, Void.class);
+        assertThat(putResponse.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+        // Verify the update with a GET call
+        var getResponse = restTemplate.getForEntity(raceLocation, Race.class);
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(Objects.requireNonNull(getResponse.getBody()).getName())
+                .isEqualTo("FORMULA 1 LOUIS VUITTON AUSTRALIAN GRAND PRIX UPDATED");
+    }
+
+    @Test
+    void shouldNotUpdateARaceWhenItDoesNotExist() {
+        // Prepare data for a race that does not exist
+        var updatedRace = new Race(
+                "NON-EXISTENT RACE",
+                LocalDate.of(2025, Month.MAY, 16)
+        );
+        var request = new HttpEntity<>(updatedRace);
+
+        // Use an ID that does not exist (e.g., 1000)
+        var putResponse = restTemplate.exchange("/api/f1/races/1000", HttpMethod.PUT, request, Void.class);
+
+        // Assert that the response status is NOT_FOUND
+        assertThat(putResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
 }
