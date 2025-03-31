@@ -172,4 +172,11 @@ class Formula1apiApplicationTests {
         var getResponse = restTemplate.getForEntity(newRaceLocation, String.class);
         assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
+
+    @Test
+    void shouldNotCreateANewRaceWithInvalidData() {
+        var invalidRace = new Race("   ", LocalDate.of(2025, Month.MARCH, 16));
+        var postResponse = restTemplate.postForEntity("/api/f1/races", invalidRace, Void.class);
+        assertThat(postResponse.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
 }
