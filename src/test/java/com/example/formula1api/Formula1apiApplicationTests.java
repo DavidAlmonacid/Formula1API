@@ -147,6 +147,16 @@ class Formula1apiApplicationTests {
     }
 
     @Test
+    void shouldNotDeleteATeamWhenItDoesNotExist() {
+        var deleteResponse = restTemplate.exchange(
+                "/api/f1/teams/1000",
+                HttpMethod.DELETE,
+                null,
+                Void.class);
+        assertThat(deleteResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
     @DirtiesContext
     void shouldCreateANewRaceProperly() {
         var newRace = new Race(
