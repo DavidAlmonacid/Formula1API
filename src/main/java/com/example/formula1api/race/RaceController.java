@@ -34,4 +34,15 @@ public class RaceController {
 
         return ResponseEntity.ok(race);
     }
+
+    @PutMapping("/{id}")
+    private ResponseEntity<Void> update(@PathVariable Long id, @RequestBody Race race) {
+        var updatedRace = raceService.update(id, race);
+
+        if (updatedRace == null) {
+            throw new NotFoundException("Race with id '" + id + "' was not found");
+        }
+
+        return ResponseEntity.noContent().build();
+    }
 }
