@@ -17,13 +17,6 @@ public class RaceController {
         this.raceService = raceService;
     }
 
-    @PostMapping
-    private ResponseEntity<Void> save(@RequestBody Race race) throws URISyntaxException {
-        var savedRace = raceService.save(race);
-        var location = new URI("/api/f1/races/" + savedRace.getId());
-        return ResponseEntity.created(location).build();
-    }
-
     @GetMapping("/{id}")
     private ResponseEntity<Race> findById(@PathVariable Long id) {
         var race = raceService.findById(id);
@@ -33,6 +26,13 @@ public class RaceController {
         }
 
         return ResponseEntity.ok(race);
+    }
+
+    @PostMapping
+    private ResponseEntity<Void> save(@RequestBody Race race) throws URISyntaxException {
+        var savedRace = raceService.save(race);
+        var location = new URI("/api/f1/races/" + savedRace.getId());
+        return ResponseEntity.created(location).build();
     }
 
     @PutMapping("/{id}")
