@@ -41,7 +41,9 @@ class Formula1apiApplicationTests {
     void shouldCreateProperlyANewDriver() {
         var driver = new Driver("Lando NoWins", new Team("McLaren", "McLaren Formula 1 Team"));
 
-        var postResponse = restTemplate.postForEntity("/api/f1/drivers", driver, Void.class);
+        var postResponse = restTemplate
+                .withBasicAuth("admin", "adminpass")
+                .postForEntity("/api/f1/drivers", driver, Void.class);
         assertThat(postResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
         var newDriverLocation = postResponse.getHeaders().getLocation();
