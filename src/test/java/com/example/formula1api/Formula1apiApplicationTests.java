@@ -56,7 +56,9 @@ class Formula1apiApplicationTests {
     @Test
     void shouldReturnABadRequestWhenCreatingANewDriverWithInvalidData() {
         Driver driver = new Driver("   ", new Team("   ", "   "));
-        var postResponse = restTemplate.postForEntity("/api/f1/drivers", driver, Void.class);
+        var postResponse = restTemplate
+                .withBasicAuth("admin", "adminpass")
+                .postForEntity("/api/f1/drivers", driver, Void.class);
         assertThat(postResponse.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 
@@ -66,7 +68,9 @@ class Formula1apiApplicationTests {
         var newDriver = new Driver("Lewis Hamilton", new Team("Ferrari", "Scuderia Ferrari HP"));
         var request = new HttpEntity<>(newDriver);
 
-        var putResponse = restTemplate.exchange("/api/f1/drivers/2", HttpMethod.PUT, request, Void.class);
+        var putResponse = restTemplate
+                .withBasicAuth("admin", "adminpass")
+                .exchange("/api/f1/drivers/2", HttpMethod.PUT, request, Void.class);
         assertThat(putResponse.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 
@@ -77,18 +81,22 @@ class Formula1apiApplicationTests {
                 new Team("Mercedes", "Mercedes-AMG PETRONAS Formula One Team"));
         var request = new HttpEntity<>(newDriver);
 
-        var putResponse = restTemplate.exchange("/api/f1/drivers/1000", HttpMethod.PUT, request, Void.class);
+        var putResponse = restTemplate
+                .withBasicAuth("admin", "adminpass")
+                .exchange("/api/f1/drivers/1000", HttpMethod.PUT, request, Void.class);
         assertThat(putResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
     @Test
     @DirtiesContext
     void shouldDeleteProperlyAnExistingDriver() {
-        var deleteResponse = restTemplate.exchange(
-                "/api/f1/drivers/1",
-                HttpMethod.DELETE,
-                null,
-                Void.class);
+        var deleteResponse = restTemplate
+                .withBasicAuth("admin", "adminpass")
+                .exchange(
+                    "/api/f1/drivers/1",
+                    HttpMethod.DELETE,
+                    null,
+                    Void.class);
 
         assertThat(deleteResponse.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
 
@@ -100,14 +108,18 @@ class Formula1apiApplicationTests {
     @DirtiesContext
     void shouldCreateProperlyANewTeam() {
         var team = new Team("Mercedes", "Mercedes-AMG PETRONAS Formula One Team");
-        var postResponse = restTemplate.postForEntity("/api/f1/teams", team, Void.class);
+        var postResponse = restTemplate
+                .withBasicAuth("admin", "adminpass")
+                .postForEntity("/api/f1/teams", team, Void.class);
         assertThat(postResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     }
 
     @Test
     void shouldReturnABadRequestWhenCreatingANewTeamWithInvalidData() {
         Team team = new Team("   ", "   ");
-        var postResponse = restTemplate.postForEntity("/api/f1/teams", team, Void.class);
+        var postResponse = restTemplate
+                .withBasicAuth("admin", "adminpass")
+                .postForEntity("/api/f1/teams", team, Void.class);
         assertThat(postResponse.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 
@@ -117,7 +129,9 @@ class Formula1apiApplicationTests {
         var newTeam = new Team("Ferrari", "Scuderia Ferrari");
         var request = new HttpEntity<>(newTeam);
 
-        var putResponse = restTemplate.exchange("/api/f1/teams/1", HttpMethod.PUT, request, Void.class);
+        var putResponse = restTemplate
+                .withBasicAuth("admin", "adminpass")
+                .exchange("/api/f1/teams/1", HttpMethod.PUT, request, Void.class);
         assertThat(putResponse.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
 
         var getResponse = restTemplate.getForEntity("/api/f1/teams/1", Team.class);
@@ -130,18 +144,22 @@ class Formula1apiApplicationTests {
         var newTeam = new Team("Ferrari", "Scuderia Ferrari 2");
         var request = new HttpEntity<>(newTeam);
 
-        var putResponse = restTemplate.exchange("/api/f1/teams/1000", HttpMethod.PUT, request, Void.class);
+        var putResponse = restTemplate
+                .withBasicAuth("admin", "adminpass")
+                .exchange("/api/f1/teams/1000", HttpMethod.PUT, request, Void.class);
         assertThat(putResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
     @Test
     @DirtiesContext
     void shouldDeleteAnExistingTeam() {
-        var deleteResponse = restTemplate.exchange(
-                "/api/f1/teams/1",
-                HttpMethod.DELETE,
-                null,
-                Void.class);
+        var deleteResponse = restTemplate
+                .withBasicAuth("admin", "adminpass")
+                .exchange(
+                    "/api/f1/teams/1",
+                    HttpMethod.DELETE,
+                    null,
+                    Void.class);
         assertThat(deleteResponse.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
 
         var getResponse = restTemplate.getForEntity("/api/f1/teams/1", String.class);
@@ -150,11 +168,13 @@ class Formula1apiApplicationTests {
 
     @Test
     void shouldNotDeleteATeamWhenItDoesNotExist() {
-        var deleteResponse = restTemplate.exchange(
-                "/api/f1/teams/1000",
-                HttpMethod.DELETE,
-                null,
-                Void.class);
+        var deleteResponse = restTemplate
+                .withBasicAuth("admin", "adminpass")
+                .exchange(
+                    "/api/f1/teams/1000",
+                    HttpMethod.DELETE,
+                    null,
+                    Void.class);
         assertThat(deleteResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
@@ -165,7 +185,9 @@ class Formula1apiApplicationTests {
                 "FORMULA 1 LOUIS VUITTON AUSTRALIAN GRAND PRIX 2025",
                 LocalDate.of(2025, Month.MARCH, 16));
 
-        var postResponse = restTemplate.postForEntity("/api/f1/races", newRace, Void.class);
+        var postResponse = restTemplate
+                .withBasicAuth("admin", "adminpass")
+                .postForEntity("/api/f1/races", newRace, Void.class);
         assertThat(postResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
         var newRaceLocation = postResponse.getHeaders().getLocation();
@@ -178,7 +200,9 @@ class Formula1apiApplicationTests {
     @Test
     void shouldNotCreateANewRaceWithInvalidData() {
         var invalidRace = new Race("   ", LocalDate.of(2025, Month.MARCH, 16));
-        var postResponse = restTemplate.postForEntity("/api/f1/races", invalidRace, Void.class);
+        var postResponse = restTemplate
+                .withBasicAuth("admin", "adminpass")
+                .postForEntity("/api/f1/races", invalidRace, Void.class);
         assertThat(postResponse.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 
@@ -189,7 +213,9 @@ class Formula1apiApplicationTests {
         var newRace = new Race(
                 "FORMULA 1 LOUIS VUITTON AUSTRALIAN GRAND PRIX 2025",
                 LocalDate.of(2025, Month.MARCH, 16));
-        var postResponse = restTemplate.postForEntity("/api/f1/races", newRace, Void.class);
+        var postResponse = restTemplate
+                .withBasicAuth("admin", "adminpass")
+                .postForEntity("/api/f1/races", newRace, Void.class);
         var raceLocation = postResponse.getHeaders().getLocation();
         assertThat(raceLocation).isNotNull();
 
@@ -199,7 +225,9 @@ class Formula1apiApplicationTests {
                 LocalDate.of(2025, Month.APRIL, 16));
         // Send PUT request with the updated race
         var request = new HttpEntity<>(updatedRace);
-        var putResponse = restTemplate.exchange(raceLocation, HttpMethod.PUT, request, Void.class);
+        var putResponse = restTemplate
+                .withBasicAuth("admin", "adminpass")
+                .exchange(raceLocation, HttpMethod.PUT, request, Void.class);
         assertThat(putResponse.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
 
         // Verify the update with a GET call
@@ -219,7 +247,9 @@ class Formula1apiApplicationTests {
         var request = new HttpEntity<>(updatedRace);
 
         // Use an ID that does not exist (e.g., 1000)
-        var putResponse = restTemplate.exchange("/api/f1/races/1000", HttpMethod.PUT, request, Void.class);
+        var putResponse = restTemplate
+                .withBasicAuth("admin", "adminpass")
+                .exchange("/api/f1/races/1000", HttpMethod.PUT, request, Void.class);
 
         // Assert that the response status is NOT_FOUND
         assertThat(putResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
