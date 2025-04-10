@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/f1/teams")
@@ -15,6 +16,11 @@ public class TeamController {
 
     private TeamController(TeamService teamService) {
         this.teamService = teamService;
+    }
+
+    @GetMapping
+    private ResponseEntity<List<Team>> findAll() {
+        return ResponseEntity.ok(teamService.findAll());
     }
 
     @GetMapping("/{id}")
