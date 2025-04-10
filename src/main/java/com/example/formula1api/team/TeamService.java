@@ -3,6 +3,8 @@ package com.example.formula1api.team;
 import com.example.formula1api.exceptions.NotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class TeamService {
 
@@ -10,6 +12,10 @@ public class TeamService {
 
     private TeamService(TeamRepository teamRepository) {
         this.teamRepository = teamRepository;
+    }
+
+    public List<Team> findAll() {
+        return (List<Team>) teamRepository.findAll();
     }
 
     public Team findById(Long id) {
