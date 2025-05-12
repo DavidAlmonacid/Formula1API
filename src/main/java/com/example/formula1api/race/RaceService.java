@@ -1,5 +1,6 @@
 package com.example.formula1api.race;
 
+import com.example.formula1api.exceptions.NotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -30,5 +31,13 @@ public class RaceService {
         existingRace.setDate(newRace.getDate());
 
         return raceRepository.save(existingRace);
+    }
+
+    public void deleteById(Long id) {
+        if (!raceRepository.existsById(id)) {
+            throw new NotFoundException("Race with id '" + id + "' was not found");
+        }
+
+        raceRepository.deleteById(id);
     }
 }
