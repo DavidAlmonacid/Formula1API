@@ -1,0 +1,9 @@
+services:
+  mysql:
+    container_name: "f1_db"
+    image: "mysql:8.0.41-bookworm"
+    environment:
+      - "MYSQL_DATABASE=formula1_db"
+      - "MYSQL_ROOT_PASSWORD=mysql"
+    ports:
+      - "3306:3306"

@@ -1,0 +1,17 @@
+ALTER TABLE drivers
+ADD CONSTRAINT fk_team
+FOREIGN KEY (team_id)
+REFERENCES teams(id)
+ON DELETE CASCADE;
+
+ALTER TABLE race_participants
+ADD CONSTRAINT fk_race
+FOREIGN KEY (race_id)
+REFERENCES races(id)
+ON DELETE CASCADE;
+
+ALTER TABLE race_participants
+ADD CONSTRAINT fk_driver
+FOREIGN KEY (driver_id)
+REFERENCES drivers(id)
+ON DELETE CASCADE;
