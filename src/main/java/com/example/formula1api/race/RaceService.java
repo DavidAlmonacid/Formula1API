@@ -3,6 +3,8 @@ package com.example.formula1api.race;
 import com.example.formula1api.exceptions.NotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class RaceService {
 
@@ -12,12 +14,16 @@ public class RaceService {
         this.raceRepository = raceRepository;
     }
 
-    public Race save(Race newRace) {
-        return raceRepository.save(newRace);
+    public List<Race> findAll() {
+        return (List<Race>) raceRepository.findAll();
     }
 
     public Race findById(Long id) {
         return raceRepository.findById(id).orElse(null);
+    }
+
+    public Race save(Race newRace) {
+        return raceRepository.save(newRace);
     }
 
     public Race update(Long id, Race newRace) {

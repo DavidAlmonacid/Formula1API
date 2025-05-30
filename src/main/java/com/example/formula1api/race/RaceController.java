@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/f1/races")
@@ -15,6 +16,11 @@ public class RaceController {
 
     public RaceController(RaceService raceService) {
         this.raceService = raceService;
+    }
+
+    @GetMapping
+    private ResponseEntity<List<Race>> findAll() {
+        return ResponseEntity.ok(raceService.findAll());
     }
 
     @GetMapping("/{id}")
