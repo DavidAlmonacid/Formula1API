@@ -280,4 +280,27 @@ class Formula1apiApplicationTests {
         var getResponse = restTemplate.getForEntity(raceLocation, String.class);
         assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
+
+    @Test
+    void shouldReturnARacesList() {
+        var response = restTemplate.getForEntity("/api/f1/races", String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    void shouldReturnARaceById() {
+        var newRace = new Race(
+                "FORMULA 1 LOUIS VUITTON AUSTRALIAN GRAND PRIX 2025",
+                LocalDate.of(2025, Month.MARCH, 16));
+
+        var postResponse = restTemplate
+                .withBasicAuth("admin", "adminpass")
+                .postForEntity("/api/f1/races", newRace, Void.class);
+
+        var raceLocation = postResponse.getHeaders().getLocation();
+        assertThat(raceLocation).isNotNull();
+
+        var getResponse = restTemplate.getForEntity(raceLocation, String.class);
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
 }
