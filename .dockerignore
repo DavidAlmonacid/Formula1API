@@ -1,0 +1,14 @@
+.git/
+.gradle/
+.idea/
+build/
+
+.gitattributes
+.gitignore
+
+compose.yaml
+Dockerfile
+
+gradlew.bat
+
+src/test/

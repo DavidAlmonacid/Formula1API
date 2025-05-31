@@ -7,3 +7,28 @@ services:
       - "MYSQL_ROOT_PASSWORD=mysql"
     ports:
       - "3306:3306"
+    restart: always
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  spring:
+    container_name: "f1_spring"
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    develop:
+      watch:
+        - action: rebuild
+          path: ./src/main
+    environment:
+      - "SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/formula1_db?useSSL=false&allowPublicKeyRetrieval=true"
+      - "SPRING_DATASOURCE_USERNAME=root"
+      - "SPRING_DATASOURCE_PASSWORD=mysql"
+      - "SPRING_JPA_HIBERNATE_DDL_AUTO=update"
+      - "SPRING_JPA_SHOW_SQL=true"
