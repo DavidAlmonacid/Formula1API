@@ -1,10 +1,10 @@
 services:
   mysql:
     container_name: "f1_db"
-    image: "mysql:8.0.41-bookworm"
+    image: "mysql:8.4"
     environment:
-      - "MYSQL_DATABASE=formula1_db"
-      - "MYSQL_ROOT_PASSWORD=mysql"
+      - "MYSQL_DATABASE=f1_db"
+      - "MYSQL_ROOT_PASSWORD=root"
     ports:
       - "3306:3306"
     restart: always
@@ -27,8 +27,8 @@ services:
         - action: rebuild
           path: ./src/main
     environment:
-      - "SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/formula1_db?useSSL=false&allowPublicKeyRetrieval=true"
+      - "SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/f1_db"
       - "SPRING_DATASOURCE_USERNAME=root"
-      - "SPRING_DATASOURCE_PASSWORD=mysql"
+      - "SPRING_DATASOURCE_PASSWORD=root"
       - "SPRING_JPA_HIBERNATE_DDL_AUTO=update"
       - "SPRING_JPA_SHOW_SQL=true"
