@@ -18,14 +18,10 @@ services:
     container_name: "f1_spring"
     build: .
     ports:
-      - "8080:8080"
+      - "8000:8080"
     depends_on:
       mysql:
         condition: service_healthy
-    develop:
-      watch:
-        - action: rebuild
-          path: ./src/main
     environment:
       - "SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/f1_db"
       - "SPRING_DATASOURCE_USERNAME=root"
